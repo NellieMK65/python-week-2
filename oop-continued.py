@@ -87,3 +87,107 @@ Customer.pay(customer1, 1000)
 # instance
 customer2 = Customer("Trevor Nyigei", "0712345678")
 customer2.pay(400)
+
+
+# PROPERTIES -> attributes controlled by methods
+# this means how we get the values and store the values
+class Car:
+    def __init__(self, name, year):
+        # attributes using the underscore indicate that
+        # they should only be used/accessed within the
+        # class itself and not outside
+        self._name = name
+        self._year = year
+
+    # getter method
+    @property
+    def name(self):
+        print("Internal", self._name)
+        return self._name.upper()
+
+    @property
+    def year(self):
+        return self._year
+
+    # setter method
+    @name.setter
+    def name(self, value):
+        # check value is equal to audi
+        if value == "Audi":
+            self._name = value
+        else:
+            # the raise keyword behaves like the return keyword
+            # where they both stop execution
+            # it also stops execution of the entire program
+            raise ValueError("Car name must be audi")
+
+    @year.setter
+    def year(self, value):
+        # I prefer to check for falsiness
+        if not isinstance(value, int):
+            raise ValueError("Year must be an integer")
+
+        self._year = value
+
+
+car1 = Car("Audi", 2020)
+print(car1.name)
+# We should no longer access attributes that start with the underscore
+# This pattern falls under encapsulation
+# print(car1._name)
+
+# is this valid? -> Yes
+car1.year = 2030
+
+# is this valid? -> No because we have control of what
+# values can be stored
+# car1.year = "Twenty twenty five"
+
+car1.name = "Audi"
+
+print(car1.year)
+
+# scenario
+class Voter:
+    def __init__(self, name, age):
+        # if age < 18:
+        #     raise ValueError("Age must be above 18")
+        self.age_validator(age)
+
+        self._name = name
+        self._age = age
+
+
+    # getter method
+    @property
+    def age(self):
+        return self._age
+
+    # setter method
+    @age.setter
+    def age(self, value):
+        # # validate the data type is an int
+        # if not isinstance(value, int):
+        #     raise ValueError("Age must be an integer")
+
+        # # condition to check if age is valid
+        # if value >= 18:
+        #     self._age = value
+        # else:
+        #     raise ValueError("Age must be above or equal to 18")
+        self.age_validator(value)
+        self._age = value
+
+    # This is just for reusablity
+    def age_validator(self, age):
+        if not isinstance(age, int):
+            raise ValueError("Age must be an integer")
+        if age < 18:
+            raise ValueError("Age must be above or equal to 18")
+    # create a validation method for age that checks for the datatype
+    # and also if it is above or equal to 18
+
+voter1 = Voter("Jane", 23)
+
+# now this gives errors
+voter1.age = 13
